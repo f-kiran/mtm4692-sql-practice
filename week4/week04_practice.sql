@@ -203,6 +203,8 @@ SELECT * FROM student WHERE UPPER(last_name) = 'YILMAZ';
 
 -- ✅ FIX: Use expression index
 CREATE INDEX IF NOT EXISTS idx_upper_last ON student(UPPER(last_name));
+CREATE INDEX IF NOT EXISTS idx_lower_last ON student(LOWER(last_name));
+
 EXPLAIN QUERY PLAN
 SELECT * FROM student WHERE UPPER(last_name) = 'YILMAZ';
 -- SEARCH using expression index
@@ -326,7 +328,7 @@ PRAGMA page_size;
 PRAGMA integrity_check;
 
 -- ============================================================
--- SECTION 14: E-Commerce Database Indexing
+-- SECTION 14: E-Commerce Database Indexing - HOMEWORK
 -- ============================================================
 
 -- Switch to e-commerce database
@@ -350,12 +352,20 @@ PRAGMA integrity_check;
 -- Composite: find products by category sorted by price
 -- CREATE INDEX idx_product_cat_price ON product(category_id, price);
 
+-- see the SECTION 15. Solve the issue of Drop.
+
 -- ============================================================
 -- SECTION 15: Cleanup
 -- ============================================================
 
 -- Drop test table
 DROP TABLE IF EXISTS large_test;
+
+-- university.db data size is still (5.6 MB) after drop, why and please solve it?
+
+-- ============================================================
+
+
 
 -- To remove practice indexes (if desired):
 -- DROP INDEX IF EXISTS idx_student_last_name;
