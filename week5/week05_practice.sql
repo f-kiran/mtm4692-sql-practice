@@ -60,7 +60,9 @@ JOIN student s ON e.student_id = s.student_id
 JOIN course c ON e.course_id = c.course_id
 JOIN department d ON s.dept_id = d.dept_id;
 
-SELECT * FROM v_transcript;
+SELECT * FROM v_transcript
+WHERE student_name LIKE 'Alice%';
+
 
 -- Query the view like a table
 SELECT * FROM v_transcript WHERE grade = 'A';
@@ -188,8 +190,6 @@ SELECT * FROM v_students_simple WHERE first_name = 'ViewUser';
 
 -- UPDATE through view - should change last_name to 'UpdatedName'
 UPDATE v_students_simple SET last_name = 'UpdatedName' WHERE first_name = 'ViewUser';
-SELECT * FROM v_students_simple WHERE first_name = 'ViewUser';
-
 
 -- Verify
 SELECT * FROM v_students_simple WHERE first_name = 'ViewUser';
@@ -230,6 +230,9 @@ SELECT name FROM sqlite_master WHERE type = 'view' ORDER BY name;
 
 .print '\n--- View Definitions ---'
 SELECT name, sql FROM sqlite_master WHERE type = 'view' ORDER BY name;
+
+.print '\n--- Triggers ---'
+SELECT name FROM sqlite_master WHERE type = 'trigger' ORDER BY name;
 
 -- ============================================================
 -- SECTION 10: Cleanup
