@@ -82,7 +82,7 @@ SELECT first_name, gpa,
        RANK()       OVER (ORDER BY gpa DESC) AS rank,
        DENSE_RANK() OVER (ORDER BY gpa DESC) AS dense_rank
 FROM student
-ORDER BY gpa DESC;
+ORDER BY gpa ASC;
 
 -- 1.4: NTILE(n) - Divide into buckets
 -- Divide students into 4 quartiles by GPA
@@ -105,7 +105,7 @@ SELECT first_name, gpa,
 FROM student
 ORDER BY decile;
 
--- 1.6: Find top 3 students in each department
+-- 1.6: Find top 2 students in each department
 WITH ranked AS (
     SELECT first_name, last_name, dept_id, gpa,
            DENSE_RANK() OVER (
@@ -115,7 +115,7 @@ WITH ranked AS (
 )
 SELECT *
 FROM ranked
-WHERE dept_rank <= 3
+WHERE dept_rank <= 2
 ORDER BY dept_id, dept_rank;
 
 -- ============================================================================
@@ -198,19 +198,19 @@ ORDER BY semester;
 -- ============================================================================
 
 -- 4.1: Compare each order to previous order
-SELECT order_id, order_date, total_amount,
-       LAG(total_amount) OVER (ORDER BY order_date) AS prev_amount,
-       total_amount - LAG(total_amount) OVER (ORDER BY order_date) AS change
+SELECT order_id, order_date, total_cents,
+       LAG(total_cents) OVER (ORDER BY order_date) AS prev_amount,
+       total_cents - LAG(total_cents) OVER (ORDER BY order_date) AS change
 FROM orders
 ORDER BY order_date;
 
 -- 4.2: Trend analysis with LAG
-SELECT order_id, order_date, total_amount,
-       LAG(total_amount) OVER (ORDER BY order_date) AS prev_amount,
+SELECT order_id, order_date, total_cents,
+       LAG(total_cents) OVER (ORDER BY order_date) AS prev_amount,
        CASE
-           WHEN total_amount > LAG(total_amount) OVER (ORDER BY order_date)
+           WHEN total_cents > LAG(total_cents) OVER (ORDER BY order_date)
                THEN 'Up'
-           WHEN total_amount < LAG(total_amount) OVER (ORDER BY order_date)
+           WHEN total_cents < LAG(total_cents) OVER (ORDER BY order_date)
                THEN 'Down'
            ELSE 'Same'
        END AS trend
@@ -226,16 +226,16 @@ FROM orders
 ORDER BY order_date;
 
 -- 4.4: Compare with next value using LEAD
-SELECT order_id, order_date, total_amount,
-       LEAD(total_amount) OVER (ORDER BY order_date) AS next_amount,
-       LEAD(total_amount) OVER (ORDER BY order_date) - total_amount AS change_to_next
+SELECT order_id, order_date, total_cents,
+       LEAD(total_cents) OVER (ORDER BY order_date) AS next_amount,
+       LEAD(total_cents) OVER (ORDER BY order_date) - total_cents AS change_to_next
 FROM orders
 ORDER BY order_date;
 
 -- 4.5: Year-over-year comparison (if multiple years exist)
-SELECT order_id, order_date, total_amount,
+SELECT order_id, order_date, total_cents,
        LAG(order_date, 365) OVER (ORDER BY order_date) AS year_ago_date,
-       LAG(total_amount, 365) OVER (ORDER BY order_date) AS year_ago_amount
+       LAG(total_cents, 365) OVER (ORDER BY order_date) AS year_ago_amount
 FROM orders
 ORDER BY order_date;
 
@@ -384,7 +384,7 @@ FROM exam_results
 UNION ALL
 SELECT student, 'Project', project
 FROM exam_results
-ORDER BY student, assessment;
+ORDER BY student;
 
 -- 7.3: Calculate statistics from unpivoted data
 WITH unpivoted_exams AS (
